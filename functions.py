@@ -1,10 +1,21 @@
 import subprocess
 import os
 from datetime import datetime
+import secret
+import urllib.request
+import requests
 
 def checkOrCreateDir(path):
 	if not os.path.exists(path):
 		os.makedirs(path)
+
+def msg(query):
+	telegramToken = secret.telegramSecret['api']
+	hostId = secret.telegramSecret['chatId']
+
+	formatedQuote = urllib.parse.quote(query)
+	requests.get(f"https://api.telegram.org/bot{telegramToken}/sendMessage?chat_id={hostId}&text={formatedQuote}")
+
 
 def currentTime():
 	now = datetime.now()

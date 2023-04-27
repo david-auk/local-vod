@@ -34,12 +34,12 @@ for channel_name in channels:
 		channelNameClean = response['data'][0]['user_name']
 		startTime = response['data'][0]['started_at']
 
-		print(f'Starting download: {channel_name} {functions.elapsedTime(startTime)} minutes after stream started.')
-		
 		functions.checkOrCreateDir(f'{downloadDir}/{channel_name}')
 
 		filename = f'\'{downloadDir}/{channel_name}/{functions.currentTime()}.mp4\''#.replace("*", ",")
 		command = f'streamlink twitch.tv/{channel_name} best "--http-header=Authorization=OAuth {oauthSecret}" --twitch-disable-ads --stdout | ffmpeg -y -i - -c copy {filename}'
 		functions.runInTmux(f'{channel_name}_dl-session', command)
+		print(f'Starting download: {channel_name} {functions.elapsedTime(startTime)} minutes after stream started.')
+		functions.msg(f'Starting download: {channel_name} {functions.elapsedTime(startTime)} minutes after stream started.')
 	else:
 		print(f'{channel_name} is Offline..')
