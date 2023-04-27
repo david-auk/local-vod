@@ -6,6 +6,7 @@ import functions
 client_id = secret.twitchSecret['clientId']
 client_secret = secret.twitchSecret['clientSecret']
 downloadDir = secret.generalInfo['downloadDir']
+oauthSecret = secret.twitchSecret['oauthSecret']
 
 # Replace with the name of the Twitch channel you want to download
 channels = secret.twitchInfo['channels']
@@ -38,8 +39,7 @@ for channel_name in channels:
 		functions.checkOrCreateDir(f'{downloadDir}/{channel_name}')
 
 		filename = f'\'{downloadDir}/{channel_name}/{functions.currentTime()}.mp4\''#.replace("*", ",")
-		command = f'streamlink twitch.tv/{channel_name} best --twitch-api-header KEY={client_id} --twitch-disable-ads --stdout| ffmpeg -y -i - -c copy {filename}'
-
+		command = f'streamlink twitch.tv/{channel_name} best "--twitch-api-header=Authorization=OAuth {oauthSecret}" --twitch-disable-ads --stdout | ffmpeg -y -i - -c copy {filename}'
 		functions.runInTmux(f'{channel_name}_dl-session', command)
 	else:
 		print(f'{channel_name} is Offline..')

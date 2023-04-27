@@ -25,7 +25,8 @@ def elapsedTime(start_time_str):
 	return elapsed_minutes
 
 def runInTmux(sessionName, command):
-	tmux_command = f'tmux new-session -d -s {sessionName} "{command}"'
+	escapedCommand = command.replace('"', '\\"')
+	tmux_command = f'tmux new-session -d -s {sessionName} "{escapedCommand}"'
 	subprocess.call(tmux_command, shell=True)
 
 def tmuxSessionRunning(sessionTargetName):
