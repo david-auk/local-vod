@@ -52,3 +52,4 @@ def tmuxSessionRunning(sessionTargetName):
 			return True
 
 	return False
+	

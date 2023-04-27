@@ -43,3 +43,4 @@ for channel_name in channels:
 		functions.msg(f'Starting download: {channel_name} {functions.elapsedTime(startTime)} minutes after stream started.')
 	else:
 		print(f'{channel_name} is Offline..')
+		
