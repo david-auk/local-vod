@@ -3,13 +3,13 @@ import secret
 import functions
 
 # Replace with your Twitch client ID and client secret
-client_id = secret.twitchSecret['clientId']
-client_secret = secret.twitchSecret['clientSecret']
-downloadDir = secret.generalInfo['downloadDir']
-oauthSecret = secret.twitchSecret['oauthSecret']
+client_id = secret.secret['twitch']['clientId']
+client_secret = secret.secret['twitch']['clientSecret']
+oauth_token = functions.getOauthToken(client_id, client_secret)
 
 # Replace with the name of the Twitch channel you want to download
-channels = secret.twitchInfo['channels']
+channels = secret.info['twitch']['channels']
+pythonWorkDir = secret.info['system']['pythonWorkDir']
 
 for channel_name in channels:
 
@@ -17,31 +17,13 @@ for channel_name in channels:
 		print(f'Already downloading stream of: {channel_name}')
 		quit()
 
-	# Get an OAuth token
-	oauth_url = f'https://id.twitch.tv/oauth2/token?client_id={client_id}&client_secret={client_secret}&grant_type=client_credentials'
-	response = requests.post(oauth_url).json()
-	oauth_token = response['access_token']
-
-	# Get the current stream data
-	url = f'https://api.twitch.tv/helix/streams?user_login={channel_name}'
-	headers = {'Client-ID': client_id, 'Authorization': f'Bearer {oauth_token}', 'Accept': 'application/vnd.twitchtv.v5+json'}
-	response = requests.get(url, headers=headers).json()
+	response = functions.getStreamData(channel_name, oauth_token, client_id)
 
 	# Check if the stream is live
 	if response['data']:
-
-		# Getting facts
-		channelNameClean = response['data'][0]['user_name']
-		startTime = response['data'][0]['started_at']
-		pythonWorkDir = secret.generalInfo['pythonWorkDir']
-
-		functions.checkOrCreateDir(f'{downloadDir}/{channel_name}')
-
-		filename = f'\'{downloadDir}/{channel_name}/{functions.currentTime()}.mp4\''#.replace("*", ",")
-		command = f'streamlink twitch.tv/{channel_name} best "--http-header=Authorization=OAuth {oauthSecret}" --twitch-disable-ads --stdout | ffmpeg -y -i - -c copy {filename};cd {pythonWorkDir};python -c \"from functions import msg; msg(\'finished downloading {channel_name}\')\"'
+		relevantData = { 'channel_name': channel_name, 'user_name': response['data'][0]['user_name'], 'started_at': response['data'][0]['started_at']}
+		command = f'python3 {pythonWorkDir}/download.py --data "{relevantData}"'
 		functions.runInTmux(f'{channel_name}_dl-session', command)
-		
-		print(f'Starting download: {channel_name} {functions.elapsedTime(startTime)} minutes after stream started.')
-		functions.msg(f'Starting download: {channel_name} {functions.elapsedTime(startTime)} minutes after stream started.')
+		print(f'Starting download: {channel_name}')
 	else:
 		print(f'{channel_name} is Offline..')
