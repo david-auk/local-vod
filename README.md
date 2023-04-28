@@ -61,7 +61,7 @@ info = {
 3. At the botom you see a input bar, press it.
 4. Paste the following command in the prompt:
 	
-```
+```JavaScript
 document.cookie.split("; ").find(item=>item.startsWith("auth-token="))?.split("=")[1]
 ```
 
