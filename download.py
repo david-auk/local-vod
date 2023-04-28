@@ -1,6 +1,7 @@
 import functions
 import secret
 import argparse
+import time
 
 # Create the parser object
 parser = argparse.ArgumentParser(description='A python script to download livestreams')
@@ -38,6 +39,8 @@ functions.runCommand(command)
 # Calculating Download Time
 downloadDuration = functions.elapsedTimeSince(timeBeforeDownload)
 
+time.sleep(30)
+
 # Checking if the stream really finished
 client_id = secret.secret['twitch']['clientId']
 client_secret = secret.secret['twitch']['clientSecret']
@@ -50,3 +53,16 @@ if response['data']:# Downloaded {time} of {channel_name}'s stream
 	functions.msg(f'Downloaded {downloadDuration} of {channel_name}\'s stream, but im detecting the stream is still live..')
 else:
 	functions.msg(f'Finished downloading: {channel_name}, the stream was {downloadDuration} long.')
+
+## PLEX ##
+
+if secret.info['plex']['isAvalible']:
+	print("Getting plex facts")
+	plexLibraryNumber = functions.getPlexLibraryNumber(secret.info['plex']['plexLibraryName'])
+
+	print(f"Refreshing Library \'{secret.info['plex']['plexLibraryName']}\'")
+	functions.refreshPlexLibrary(plexLibraryNumber)
+
+
+
+time.sleep(15)

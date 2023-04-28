@@ -5,6 +5,22 @@ import secret
 import urllib.request
 import requests
 
+def getPlexLibraryNumber(plexLibraryName):
+	user = secret.info['plex']['user']
+	host = secret.info['plex']['host']
+
+	cmd = f'ssh {user}@{host} "sudo -u plex /usr/lib/plexmediaserver/Plex\\ Media\\ Scanner --list|grep \"{plexLibraryName}\"|tr -d [:space:]|sed -e \"s/:.*//\""'
+	output = subprocess.check_output(cmd, shell=True)
+	output = output.decode('utf-8').strip()
+
+	return output
+
+def refreshPlexLibrary(plexLibraryNumber):
+	user = secret.info['plex']['user']
+	host = secret.info['plex']['host']
+
+	runCommand(f'ssh {user}@{host} "sudo -u plex /usr/lib/plexmediaserver/Plex\\ Media\\ Scanner -srp -c {plexLibraryNumber}" &> /dev/null')
+
 def checkOrCreateDir(path):
 	if not os.path.exists(path):
 		os.makedirs(path)
