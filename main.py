@@ -6,6 +6,7 @@ import functions
 client_id = secret.secret['twitch']['clientId']
 client_secret = secret.secret['twitch']['clientSecret']
 oauth_token = functions.getOauthToken(client_id, client_secret)
+print(f"\nOAuht Token: {oauth_token}\n\n---")
 
 # Replace with the name of the Twitch channel you want to download
 channels = secret.info['twitch']['channels']
@@ -15,7 +16,7 @@ for channel_name in channels:
 
 	if functions.tmuxSessionRunning(f'{channel_name}_dl-session'):
 		print(f'Already downloading stream of: {channel_name}')
-		quit()
+		continue
 
 	response = functions.getStreamData(channel_name, oauth_token, client_id)
 
@@ -27,3 +28,5 @@ for channel_name in channels:
 		print(f'Starting download: {channel_name}')
 	else:
 		print(f'{channel_name} is Offline..')
+
+print('---\n')
