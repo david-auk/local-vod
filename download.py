@@ -80,7 +80,7 @@ if secret.info['plex']['isAvalible']:
 	# Make the request and parse the response as JSON
 	response = requests.get(url, headers={"Accept": "application/json", "X-Plex-Token": plexToken}).json()
 
-	for item in data["MediaContainer"]["Metadata"]:
+	for item in response["MediaContainer"]["Metadata"]:
 		# Channel
 		if item["title"].lower().replace(' ', '') == channelNameUrl or item["title"].lower().replace(' ', '_') == channelNameUrl:
 			channelResponse = requests.get(f"http://incus:32400{item['key']}", headers={"Accept": "application/json", "X-Plex-Token": plexToken})
