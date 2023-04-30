@@ -79,11 +79,14 @@ if secret.info['plex']['isAvalible']:
 	library = plex.library.sectionByID(int(plexLibraryNumber))
 	library.update()
 
+	time.sleep(15)
+
 	# Make the request and parse the response as JSON
 	response = requests.get(url, headers={"Accept": "application/json", "X-Plex-Token": plexToken}).json()
 
 	for item in response["MediaContainer"]["Metadata"]:
 		# Channel
+		print(item)
 		if item["title"].lower().replace(' ', '') == channelNameUrl or item["title"].lower().replace(' ', '_') == channelNameUrl:
 			channelResponse = requests.get(f"http://incus:32400{item['key']}", headers={"Accept": "application/json", "X-Plex-Token": plexToken})
 			response = json.loads(channelResponse.text)
