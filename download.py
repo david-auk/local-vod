@@ -36,9 +36,6 @@ filename = f'\'{downloadDir}/{channelNameUrl}/{functions.currentTime()}.mp4\''
 
 ### </Getting facts> ###
 
-print(filename)
-quit()
-
 # Getting the date to calulate runtime
 timeBeforeDownload = functions.getCurrentTime()
 
