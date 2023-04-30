@@ -35,7 +35,7 @@ streamThumbnailUrl = data['thumbnail_url']
 # File info
 downloadDir = secret.info['system']['downloadDir']
 functions.checkOrCreateDir(f'{downloadDir}/{channelNameUrl}')
-filename = f'\'{downloadDir}/{channelNameUrl}/{functions.currentTime()}.mp4\''
+filename = f'\'{downloadDir}/{channelNameUrl}/{functions.formattedDate()}.mp4\''
 
 ### </Getting facts> ###
 
@@ -43,7 +43,6 @@ filename = f'\'{downloadDir}/{channelNameUrl}/{functions.currentTime()}.mp4\''
 timeBeforeDownload = functions.getCurrentTime()
 
 # Running the command
-#command = f'streamlink twitch.tv/{channelNameUrl} best "--http-header=Authorization=OAuth {oauthSecret}" --twitch-disable-ads --stdout | ffmpeg -y -i - -c copy {filename}'
 command = f'streamlink twitch.tv/{channelNameUrl} best --twitch-disable-ads --stdout | ffmpeg -y -i - -c copy {filename}'
 functions.runCommand(command)
 
@@ -79,7 +78,7 @@ if secret.info['plex']['isAvalible']:
 	library = plex.library.sectionByID(int(plexLibraryNumber))
 	library.update()
 
-	time.sleep(15)
+	time.sleep(10)
 
 	# Make the request and parse the response as JSON
 	response = requests.get(url, headers={"Accept": "application/json", "X-Plex-Token": plexToken}).json()
@@ -102,7 +101,7 @@ if secret.info['plex']['isAvalible']:
 								episodeRatingKey = episode['ratingKey']
 								episode = plex.fetchItem(f'/library/metadata/{episodeRatingKey}')
 								episode.batchEdits()
-								episode.editTitle(streamTitle).editSummary(f'On Sunday 11:20 {channelNameClean} went live to stream: {streamGameName}')
+								episode.editTitle(streamTitle).editSummary(f'On {function.getDayFromDate(timeBeforeDownload)} {functions.getHourAndMinuteFromDate(timeBeforeDownload)} {channelNameClean} went live to stream: {streamGameName}')
 								episode.saveEdits()
 							else:
 								print(f'filename.split(\'/\')[-1] = {filename.split("/")[-1]}\npart[\'file\'].split(\'/\')[-1] = {part["file"].split("/")[-1]}')

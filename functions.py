@@ -43,7 +43,7 @@ def msg(query):
 	formatedQuote = urllib.parse.quote(query)
 	requests.get(f"https://api.telegram.org/bot{telegramToken}/sendMessage?chat_id={hostId}&text={formatedQuote}")
 
-def currentTime():
+def formattedDate():
 	now = datetime.now()
 	hour = str(now.hour).zfill(2)
 	minute = str(now.minute).zfill(2)
@@ -51,7 +51,8 @@ def currentTime():
 	month = str(now.month).zfill(2)
 	year = now.year
 	hour_minute = str(hour) + ',' + str(minute)
-	formatted_time = '[' + hour_minute + ']-' + str(day) + '-' + str(month) + '-' + str(year)
+	formatted_time = f'{year}-{month}-{day}-{hour}-{minute}'
+	#formatted_time = '[' + hour_minute + ']-' + str(day) + '-' + str(month) + '-' + str(year)
 	return formatted_time
 
 def elapsedTime(start_time_str):
@@ -110,6 +111,14 @@ def getCurrentTime():
 	date_str = now.strftime(date_format)
 
 	return date_str
+
+def getDayFromDate(date_string):
+	date_obj = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
+	return date_obj.strftime("%A")
+
+def getHourAndMinuteFromDate(date_string):
+	date_obj = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
+	return date_obj.strftime("%H:%M")
 
 def elapsedTimeSince(date_str):
 	date_format = "%Y-%m-%d %H:%M:%S"
