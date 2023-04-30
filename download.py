@@ -2,6 +2,8 @@ import functions
 import secret
 import argparse
 import time
+import requests
+
 from plexapi.server import PlexServer
 
 # Create the parser object
