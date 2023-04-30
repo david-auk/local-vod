@@ -76,7 +76,7 @@ if secret.info['plex']['isAvalible']:
 	plex = PlexServer(f"http://{secret.info['plex']['host']}:32400", plexToken)
 
 	print(f"Refreshing Library \'{secret.info['plex']['plexLibraryName']}\'")
-	library = plex.library.sectionByID(lib)
+	library = plex.library.sectionByID(plexLibraryNumber)
 	library.update()
 
 	# Make the request and parse the response as JSON
