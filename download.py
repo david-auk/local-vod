@@ -98,7 +98,7 @@ if secret.info['plex']['isAvalible']:
 				for episode in seasonResponse['MediaContainer']['Metadata']:
 					for media in episode['Media']:
 						for part in media['Part']:
-							if filename.split('/')[-1] == part['file'].split('/')[-1]: # If out of all the episodes in season the filenames match
+							if filename.split('/')[-1].replace("'", '') == part['file'].split('/')[-1]: # If out of all the episodes in season the filenames match
 								episodeRatingKey = episode['ratingKey']
 								episode = plex.fetchItem(f'/library/metadata/{episodeRatingKey}')
 								episode.batchEdits()
