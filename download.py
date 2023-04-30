@@ -33,7 +33,8 @@ functions.msg(f'Started downloading: {channel_name} {functions.elapsedTime(start
 timeBeforeDownload = functions.getCurrentTime()
 
 # Running the command
-command = f'streamlink twitch.tv/{channel_name} best "--http-header=Authorization=OAuth {oauthSecret}" --twitch-disable-ads --stdout | ffmpeg -y -i - -c copy {filename}'
+#command = f'streamlink twitch.tv/{channel_name} best "--http-header=Authorization=OAuth {oauthSecret}" --twitch-disable-ads --stdout | ffmpeg -y -i - -c copy {filename}'
+command = f'streamlink twitch.tv/{channel_name} best --twitch-disable-ads --stdout | ffmpeg -y -i - -c copy {filename}'
 functions.runCommand(command)
 
 # Calculating Download Time
