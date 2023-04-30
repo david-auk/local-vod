@@ -51,7 +51,7 @@ def formattedDate():
 	month = str(now.month).zfill(2)
 	year = now.year
 	hour_minute = str(hour) + ',' + str(minute)
-	formatted_time = f'{year}-{month}-{day}-{hour}-{minute}'
+	formatted_time = f'{year}-{month}-{day}-{hour}{minute}'
 	#formatted_time = '[' + hour_minute + ']-' + str(day) + '-' + str(month) + '-' + str(year)
 	return formatted_time
 
