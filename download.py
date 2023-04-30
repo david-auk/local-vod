@@ -76,7 +76,7 @@ if secret.info['plex']['isAvalible']:
 
 	# Set the URL and authentication token for your Plex server
 	url = f"http://{secret.info['plex']['host']}:32400/library/sections/{plexLibraryNumber}/all"
-	plexToken = 'UVx5TTNzbwbimHaqzxyM'
+	plexToken = secret.info['plex']['plexToken']
 
 	plex = PlexServer(f"http://{secret.info['plex']['host']}:32400", plexToken)
 
