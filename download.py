@@ -69,14 +69,15 @@ if secret.info['plex']['isAvalible']:
 	print("Getting plex facts")
 	plexLibraryNumber = functions.getPlexLibraryNumber(secret.info['plex']['plexLibraryName'])
 
-	print(f"Refreshing Library \'{secret.info['plex']['plexLibraryName']}\'")
-	functions.refreshPlexLibrary(plexLibraryNumber)
-
 	# Set the URL and authentication token for your Plex server
 	url = f"http://{secret.info['plex']['host']}:32400/library/sections/{plexLibraryNumber}/all"
 	plexToken = secret.info['plex']['plexToken']
 
 	plex = PlexServer(f"http://{secret.info['plex']['host']}:32400", plexToken)
+
+	print(f"Refreshing Library \'{secret.info['plex']['plexLibraryName']}\'")
+	library = plex.library.sectionByID(lib)
+	library.update()
 
 	# Make the request and parse the response as JSON
 	response = requests.get(url, headers={"Accept": "application/json", "X-Plex-Token": plexToken}).json()
