@@ -105,5 +105,6 @@ if secret.info['plex']['isAvalible']:
 								episode.batchEdits()
 								episode.editTitle(streamTitle).editSummary(f'On Sunday 11:20 {channelNameClean} went live to stream: {streamGameName}').editTagline(streamLanguage)
 								episode.saveEdits()
+								print('updated')
 
 time.sleep(15)
