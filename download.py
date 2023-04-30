@@ -102,7 +102,7 @@ if secret.info['plex']['isAvalible']:
 								episodeRatingKey = episode['ratingKey']
 								episode = plex.fetchItem(f'/library/metadata/{episodeRatingKey}')
 								episode.batchEdits()
-								episode.editTitle(streamTitle).editSummary(f'On Sunday 11:20 {channelNameClean} went live to stream: {streamGameName}').editTagline(streamLanguage)
+								episode.editTitle(streamTitle).editSummary(f'On Sunday 11:20 {channelNameClean} went live to stream: {streamGameName}')
 								episode.saveEdits()
 							else:
 								print(f'filename.split(\'/\')[-1] = {filename.split("/")[-1]}\npart[\'file\'].split(\'/\')[-1] = {part["file"].split("/")[-1]}')
