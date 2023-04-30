@@ -86,17 +86,17 @@ if secret.info['plex']['isAvalible']:
 
 	for item in response["MediaContainer"]["Metadata"]:
 		# Channel
-		print(item)
 		if item["title"].lower().replace(' ', '') == channelNameUrl or item["title"].lower().replace(' ', '_') == channelNameUrl:
 			channelResponse = requests.get(f"http://incus:32400{item['key']}", headers={"Accept": "application/json", "X-Plex-Token": plexToken})
 			response = json.loads(channelResponse.text)
 			# SEASON
-			for episode in response["MediaContainer"]["Metadata"]:
-				print(f"Season: {episode['title']}")
-				print(f"ratingKey: {episode['ratingKey']}")
-				seasonResponse = requests.get(f'http://incus:32400/library/metadata/{episode["ratingKey"]}/children', headers={"Accept": "application/json", "X-Plex-Token": plexToken}).json()
+			for season in response["MediaContainer"]["Metadata"]:
+				print(f"Season: {season['title']}")
+				print(f"ratingKey: {season['ratingKey']}")
+				seasonResponse = requests.get(f'http://incus:32400/library/metadata/{season["ratingKey"]}/children', headers={"Accept": "application/json", "X-Plex-Token": plexToken}).json()
 				# EPISODE
 				for episode in seasonResponse['MediaContainer']['Metadata']:
+					print(episode)
 					for media in episode['Media']:
 						for part in media['Part']:
 							if filename.split('/')[-1] == part['file'].split('/')[-1]: # If out of all the episodes in season the filenames match
