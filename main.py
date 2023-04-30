@@ -24,8 +24,6 @@ for channel_name in channels:
 	if response['data']:
 		encodedData = functions.encode(str(response['data']))
 		command = f'python3 {pythonWorkDir}/download.py --data "{encodedData}"'
-		print(command)
-		quit()
 		functions.runInTmux(f'{channel_name}_dl-session', command)
 		print(f'Starting download: {channel_name}')
 	else:
