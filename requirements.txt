@@ -1,3 +1,4 @@
 certifi==2022.12.7
 requests==2.29.0
 urllib3==1.26.15
+PlexAPI==4.13.4

@@ -4,6 +4,17 @@ from datetime import datetime, timedelta
 import secret
 import urllib.request
 import requests
+import base64
+
+def encode(strToBeEncoded):
+	encodedString = base64.b64encode(strToBeEncoded.encode('utf-8')).decode('utf-8')
+	
+	return encodedString
+
+def decode(strToBeDecoded):
+	decodedString = base64.b64decode(strToBeDecoded).decode('utf-8')
+
+	return decodedString
 
 def getPlexLibraryNumber(plexLibraryName):
 	user = secret.info['plex']['user']
