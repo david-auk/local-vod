@@ -96,7 +96,6 @@ if secret.info['plex']['isAvalible']:
 				seasonResponse = requests.get(f'http://incus:32400/library/metadata/{season["ratingKey"]}/children', headers={"Accept": "application/json", "X-Plex-Token": plexToken}).json()
 				# EPISODE
 				for episode in seasonResponse['MediaContainer']['Metadata']:
-					print(episode)
 					for media in episode['Media']:
 						for part in media['Part']:
 							if filename.split('/')[-1] == part['file'].split('/')[-1]: # If out of all the episodes in season the filenames match
@@ -105,6 +104,7 @@ if secret.info['plex']['isAvalible']:
 								episode.batchEdits()
 								episode.editTitle(streamTitle).editSummary(f'On Sunday 11:20 {channelNameClean} went live to stream: {streamGameName}').editTagline(streamLanguage)
 								episode.saveEdits()
-								print('updated')
+							else:
+								print(f'filename.split(\'/\')[-1] = {filename.split("/")[-1]}\npart[\'file\'].split(\'/\')[-1] = {part["file"].split("/")[-1]}')
 
 time.sleep(15)
