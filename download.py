@@ -49,8 +49,6 @@ functions.runCommand(command)
 # Calculating Download Time
 downloadDuration = functions.elapsedTimeSince(timeBeforeDownload)
 
-time.sleep(30)
-
 # Checking if the stream really finished
 client_id = secret.secret['twitch']['clientId']
 client_secret = secret.secret['twitch']['clientSecret']
