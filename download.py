@@ -42,7 +42,7 @@ if secret.info['plex']['isAvalible']:
 	currentEpisodeNum = functions.episodesInSeasonCount(plexLibraryNumber, channelNameUrl)
 
 	downloadDir = secret.info['system']['downloadDir']
-	filename = f'\'{downloadDir}/{channelNameUrl}/{channelNameUrl} - {currentEpisodeNum + 1} - {functions.datetime.now().year}_{str(functions.datetime.now().month).zfill(2)}_{str(functions.datetime.now().day).zfill(2)}.mp4\''
+	filename = f'\'{downloadDir}/{channelNameUrl}/{channelNameUrl} - E{currentEpisodeNum + 1} - {functions.datetime.now().year}_{str(functions.datetime.now().month).zfill(2)}_{str(functions.datetime.now().day).zfill(2)}.mp4\''
 else:
 	downloadDir = secret.info['system']['downloadDir']
 	filename = f'\'{downloadDir}/{channelNameUrl}/{functions.formattedFilename(channelNameClean)}.mp4\''
@@ -110,7 +110,7 @@ if secret.info['plex']['isAvalible']:
 								episodeRatingKey = episode['ratingKey']
 								episode = plex.fetchItem(f'/library/metadata/{episodeRatingKey}')
 								episode.batchEdits()
-								episode.editTitle(streamTitle).editSummary(f'On {function.getDayFromDate(timeBeforeDownload)} {functions.getHourAndMinuteFromDate(timeBeforeDownload)} {channelNameClean} went live to stream: {streamGameName}')
+								episode.editTitle(streamTitle).editSummary(f'On {functions.getDayFromDate(timeBeforeDownload)} {functions.getHourAndMinuteFromDate(timeBeforeDownload)} {channelNameClean} went live to stream: {streamGameName}')
 								episode.saveEdits()
 							else:
 								print(f'filename.split(\'/\')[-1] = {filename.split("/")[-1]}\npart[\'file\'].split(\'/\')[-1] = {part["file"].split("/")[-1]}')
