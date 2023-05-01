@@ -32,12 +32,24 @@ streamGameName = data['game_name']
 streamLanguage = data['language']
 streamThumbnailUrl = data['thumbnail_url']
 
+if secret.info['plex']['isAvalible']:
+	print("Getting plex facts")
+	plexLibraryNumber = functions.getPlexLibraryNumber(secret.info['plex']['plexLibraryName'])
+
+	plexToken = secret.info['plex']['plexToken']
+
+	plex = PlexServer(f"http://{secret.info['plex']['host']}:32400", plexToken)
+	currentEpisodeNum = functions.episodesInSeasonCount(plexLibraryNumber, channelNameUrl)
+
+	downloadDir = secret.info['system']['downloadDir']
+	filename = f'\'{downloadDir}/{channelNameUrl}/{channelNameUrl} - {currentEpisodeNum + 1} - {functions.datetime.now().year}_{str(functions.datetime.now().month).zfill(2)}_{str(functions.datetime.now().day).zfill(2)}.mp4\''
+else:
+	downloadDir = secret.info['system']['downloadDir']
+	filename = f'\'{downloadDir}/{channelNameUrl}/{functions.formattedFilename(channelNameClean)}.mp4\''
+
 # File info
-downloadDir = secret.info['system']['downloadDir']
+
 functions.checkOrCreateDir(f'{downloadDir}/{channelNameUrl}')
-#functions.checkOrCreateDir(f'{downloadDir}/{channelNameUrl}/{channelNameUrl} - {functions.datetime.now().year}')
-#filename = f'\'{downloadDir}/{channelNameUrl}/{functions.formattedFilename(channelNameClean)}.mp4\''
-filename = f'\'{downloadDir}/{channelNameUrl}/{channelNameUrl} - Season {functions.datetime.now().year}_{functions.datetime.now().strftime("%B")} - {functions.get_formatted_date()}.mp4\''
 
 ### </Getting facts> ###
 
@@ -67,14 +79,9 @@ else:
 ## PLEX ##
 
 if secret.info['plex']['isAvalible']:
-	print("Getting plex facts")
-	plexLibraryNumber = functions.getPlexLibraryNumber(secret.info['plex']['plexLibraryName'])
 
 	# Set the URL and authentication token for your Plex server
 	url = f"http://{secret.info['plex']['host']}:32400/library/sections/{plexLibraryNumber}/all"
-	plexToken = secret.info['plex']['plexToken']
-
-	plex = PlexServer(f"http://{secret.info['plex']['host']}:32400", plexToken)
 
 	print(f"Refreshing Library \'{secret.info['plex']['plexLibraryName']}\'")
 	library = plex.library.sectionByID(int(plexLibraryNumber))

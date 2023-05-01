@@ -1,10 +1,12 @@
 import subprocess
 import os
 from datetime import datetime, timedelta
+from plexapi.server import PlexServer
 import secret
 import urllib.request
 import requests
 import base64
+import json
 
 def encode(strToBeEncoded):
 	encodedString = base64.b64encode(strToBeEncoded.encode('utf-8')).decode('utf-8')
@@ -36,6 +38,22 @@ def msg(query):
 
 	formatedQuote = urllib.parse.quote(query)
 	requests.get(f"https://api.telegram.org/bot{telegramToken}/sendMessage?chat_id={hostId}&text={formatedQuote}")
+
+def episodesInSeasonCount(plexLibraryNumber, channelNameUrl):
+	url = f"http://{secret.info['plex']['host']}:32400/library/sections/{plexLibraryNumber}/all"
+	response = requests.get(url, headers={"Accept": "application/json", "X-Plex-Token": secret.info['plex']['plexToken']}).json()
+	episodes = 0
+	for item in response["MediaContainer"]["Metadata"]:
+		if item["title"].lower().replace(' ', '') == channelNameUrl or item["title"].lower().replace(' ', '_') == channelNameUrl:
+			channelResponse = requests.get(f"http://incus:32400{item['key']}", headers={"Accept": "application/json", "X-Plex-Token": secret.info['plex']['plexToken']})
+			response = json.loads(channelResponse.text)
+			for season in response["MediaContainer"]["Metadata"]:
+				#if str(datetime.now().year) in season['title']:
+				seasonResponse = requests.get(f'http://incus:32400/library/metadata/{season["ratingKey"]}/children', headers={"Accept": "application/json", "X-Plex-Token": secret.info['plex']['plexToken']}).json()
+				for episode in seasonResponse['MediaContainer']['Metadata']:
+					episodes += 1
+
+	return episodes
 
 #def formattedFilename(channelName):
 #	now = datetime.now()
@@ -113,43 +131,6 @@ def getDayFromDate(date_string):
 def getHourAndMinuteFromDate(date_string):
 	date_obj = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
 	return date_obj.strftime("%H:%M")
-
-def get_formatted_date():
-	zRule = { 'one': 'zeroone', 'two': 'zerotwo', 'three': 'zerothree', 'five': 'zerofive', 'six': 'zerosix', 'seven': 'zeroseven', 'eight': 'zeroeight', 'nine': 'zeronine' }
-	now = datetime.now()
-	
-	year = convert_to_text(now.year)
-	month = zRule.get(convert_to_text(now.month)) if convert_to_text(now.month) in zRule else convert_to_text(now.month)
-	day = zRule.get(convert_to_text(now.day)) if convert_to_text(now.day) in zRule else convert_to_text(now.day)
-	hour = zRule.get(convert_to_text(now.hour)) if convert_to_text(now.hour) in zRule else convert_to_text(now.hour)
-	minute = zRule.get(convert_to_text(now.minute)) if convert_to_text(now.minute) in zRule else convert_to_text(now.minute)
-	formatted_date = f"Y{year}_M{month}_D{day}_{hour}_{minute}"
-	
-	return formatted_date
-
-def convert_to_text(number):
-	if number == 0:
-		return "zero"
-	ones = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
-	tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"]
-	teens = ["ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"]
-	text = ""
-	if number >= 1000:
-		text += f"{ones[number // 1000]} thousand "
-		number %= 1000
-	if number >= 100:
-		text += f"{ones[number // 100]} hundred "
-		number %= 100
-	if number >= 20:
-		text += f"{tens[number // 10]} "
-		number %= 10
-	if number >= 10:
-		text += f"{teens[number % 10]} "
-		return text.strip()
-	if number > 0:
-		text += f"{ones[number]} "
-	return text.strip().replace(' ', '')
-
 
 def elapsedTimeSince(date_str):
 	date_format = "%Y-%m-%d %H:%M:%S"
