@@ -35,9 +35,9 @@ streamThumbnailUrl = data['thumbnail_url']
 # File info
 downloadDir = secret.info['system']['downloadDir']
 functions.checkOrCreateDir(f'{downloadDir}/{channelNameUrl}')
-functions.checkOrCreateDir(f'{downloadDir}/{channelNameUrl}/{channelNameUrl} - {functions.datetime.now().year}')
+#functions.checkOrCreateDir(f'{downloadDir}/{channelNameUrl}/{channelNameUrl} - {functions.datetime.now().year}')
 #filename = f'\'{downloadDir}/{channelNameUrl}/{functions.formattedFilename(channelNameClean)}.mp4\''
-filename = f'\'{downloadDir}/{channelNameUrl}/{channelNameUrl} - {functions.datetime.now().year}/{functions.datetime.now().strftime("%B")} - {functions.get_formatted_date()}.mp4\''
+filename = f'\'{downloadDir}/{channelNameUrl}/{channelNameUrl} - Season {functions.datetime.now().year}_{functions.datetime.now().strftime("%B")} - {functions.get_formatted_date()}.mp4\''
 
 ### </Getting facts> ###
 
