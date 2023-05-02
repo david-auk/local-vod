@@ -1,9 +1,22 @@
 import subprocess
 import os
 from datetime import datetime, timedelta
+from plexapi.server import PlexServer
 import secret
 import urllib.request
 import requests
+import base64
+import json
+
+def encode(strToBeEncoded):
+	encodedString = base64.b64encode(strToBeEncoded.encode('utf-8')).decode('utf-8')
+	
+	return encodedString
+
+def decode(strToBeDecoded):
+	decodedString = base64.b64decode(strToBeDecoded).decode('utf-8')
+
+	return decodedString
 
 def getPlexLibraryNumber(plexLibraryName):
 	user = secret.info['plex']['user']
@@ -14,12 +27,6 @@ def getPlexLibraryNumber(plexLibraryName):
 	output = output.decode('utf-8').strip()
 
 	return output
-
-def refreshPlexLibrary(plexLibraryNumber):
-	user = secret.info['plex']['user']
-	host = secret.info['plex']['host']
-
-	runCommand(f'ssh {user}@{host} "sudo -u plex /usr/lib/plexmediaserver/Plex\\ Media\\ Scanner -srp -c {plexLibraryNumber}" &> /dev/null')
 
 def checkOrCreateDir(path):
 	if not os.path.exists(path):
@@ -32,16 +39,33 @@ def msg(query):
 	formatedQuote = urllib.parse.quote(query)
 	requests.get(f"https://api.telegram.org/bot{telegramToken}/sendMessage?chat_id={hostId}&text={formatedQuote}")
 
-def currentTime():
-	now = datetime.now()
-	hour = str(now.hour).zfill(2)
-	minute = str(now.minute).zfill(2)
-	day = str(now.day).zfill(2)
-	month = str(now.month).zfill(2)
-	year = now.year
-	hour_minute = str(hour) + ',' + str(minute)
-	formatted_time = '[' + hour_minute + ']-' + str(day) + '-' + str(month) + '-' + str(year)
-	return formatted_time
+def episodesInSeasonCount(plexLibraryNumber, channelNameUrl):
+	url = f"http://{secret.info['plex']['host']}:32400/library/sections/{plexLibraryNumber}/all"
+	response = requests.get(url, headers={"Accept": "application/json", "X-Plex-Token": secret.info['plex']['plexToken']}).json()
+	episodes = 0
+	for item in response["MediaContainer"]["Metadata"]:
+		if item["title"].lower().replace(' ', '') == channelNameUrl or item["title"].lower().replace(' ', '_') == channelNameUrl:
+			channelResponse = requests.get(f"http://incus:32400{item['key']}", headers={"Accept": "application/json", "X-Plex-Token": secret.info['plex']['plexToken']})
+			response = json.loads(channelResponse.text)
+			for season in response["MediaContainer"]["Metadata"]:
+				#if str(datetime.now().year) in season['title']:
+				seasonResponse = requests.get(f'http://incus:32400/library/metadata/{season["ratingKey"]}/children', headers={"Accept": "application/json", "X-Plex-Token": secret.info['plex']['plexToken']}).json()
+				for episode in seasonResponse['MediaContainer']['Metadata']:
+					episodes += 1
+
+	return episodes
+
+#def formattedFilename(channelName):
+#	now = datetime.now()
+#	hour = str(now.hour).zfill(2)
+#	minute = str(now.minute).zfill(2)
+#	day = str(now.day).zfill(2)
+#	month = str(now.month).zfill(2)
+#	year = now.year
+#	hour_minute = str(hour) + ',' + str(minute)
+#	formatted_time = f'{channelName} - {year} - {month}-{day}_{hour}-{minute}'
+#	#formatted_time = '[' + hour_minute + ']-' + str(day) + '-' + str(month) + '-' + str(year)
+#	return formatted_time
 
 def elapsedTime(start_time_str):
 	start_time = datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M:%SZ')
@@ -99,6 +123,14 @@ def getCurrentTime():
 	date_str = now.strftime(date_format)
 
 	return date_str
+
+def getDayFromDate(date_string):
+	date_obj = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
+	return date_obj.strftime("%A")
+
+def getHourAndMinuteFromDate(date_string):
+	date_obj = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
+	return date_obj.strftime("%H:%M")
 
 def elapsedTimeSince(date_str):
 	date_format = "%Y-%m-%d %H:%M:%S"

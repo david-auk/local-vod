@@ -22,8 +22,8 @@ for channel_name in channels:
 
 	# Check if the stream is live
 	if response['data']:
-		relevantData = { 'channel_name': channel_name, 'user_name': response['data'][0]['user_name'], 'started_at': response['data'][0]['started_at']}
-		command = f'python3 {pythonWorkDir}/download.py --data "{relevantData}"'
+		encodedData = functions.encode(str(response['data']))
+		command = f'python3 {pythonWorkDir}/download.py --data "{encodedData}"'
 		functions.runInTmux(f'{channel_name}_dl-session', command)
 		print(f'Starting download: {channel_name}')
 	else:
