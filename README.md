@@ -37,7 +37,8 @@ info = {
 		'isAvalible': True,
 		'host': 'hostAdress',
 		'user': 'userName',
-		'plexLibraryName': 'LibraryName'
+		'plexLibraryName': 'LibraryName',
+		'plexToken': 'KEY'
 	}
 }
 ```
@@ -80,6 +81,15 @@ document.cookie.split("; ").find(item=>item.startsWith("auth-token="))?.split("=
 2. Copy the numeric `ChatID` and replace the 'KEY' in **secret.py**.
 
 > If this method doesn't work anymore you can try other methods to aquire your ChatID, it is account bound
+#### Acquiring secrets: Plex
+**plexToken**
+
+1. Go to any of your content in plex.
+2. Click the three dots at the bottom right.
+3. Press 'Get Info'
+4. Click on the 'View XML' button at the bottom left of the page.
+5. In the last part of the url you will see `&X-Plex-Token=KEY`.
+6. Copy this 'KEY' value in **secret.py**
 
 ## Use
 
