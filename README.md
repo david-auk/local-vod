@@ -86,10 +86,10 @@ document.cookie.split("; ").find(item=>item.startsWith("auth-token="))?.split("=
 
 1. Go to any of your content in plex.
 2. Click the three dots at the bottom right.
-3. Press 'Get Info'
+3. Press 'Get Info'.
 4. Click on the 'View XML' button at the bottom left of the page.
 5. In the last part of the url you will see `&X-Plex-Token=KEY`.
-6. Copy this 'KEY' value in **secret.py**
+6. Copy this 'KEY' value in **secret.py**.
 
 ## Use
 
