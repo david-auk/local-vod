@@ -55,18 +55,6 @@ def episodesInSeasonCount(plexLibraryNumber, channelNameUrl):
 
 	return episodes
 
-#def formattedFilename(channelName):
-#	now = datetime.now()
-#	hour = str(now.hour).zfill(2)
-#	minute = str(now.minute).zfill(2)
-#	day = str(now.day).zfill(2)
-#	month = str(now.month).zfill(2)
-#	year = now.year
-#	hour_minute = str(hour) + ',' + str(minute)
-#	formatted_time = f'{channelName} - {year} - {month}-{day}_{hour}-{minute}'
-#	#formatted_time = '[' + hour_minute + ']-' + str(day) + '-' + str(month) + '-' + str(year)
-#	return formatted_time
-
 def elapsedTime(start_time_str):
 	start_time = datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M:%SZ')
 	end_time = datetime.now()
@@ -75,7 +63,7 @@ def elapsedTime(start_time_str):
 	return elapsed_minutes
 
 def runInTmux(sessionName, command):
-	escapedCommand = command.replace('"', '\\"')
+	escapedCommand = command.replace('"', "'")
 	tmux_command = f'tmux new-session -d -s {sessionName} "{escapedCommand}"'
 	subprocess.call(tmux_command, shell=True)
 
