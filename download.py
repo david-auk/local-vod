@@ -57,7 +57,7 @@ functions.checkOrCreateDir(f'{downloadDir}/{channelNameUrl}')
 timeBeforeDownload = functions.getCurrentTime()
 
 # Running the command
-command = f'streamlink twitch.tv/{channelNameUrl} best --twitch-disable-ads --stdout | ffmpeg -y -i - -c copy {filename}'
+command = f'/usr/local/bin/streamlink twitch.tv/{channelNameUrl} best --twitch-disable-ads --stdout | /usr/bin/ffmpeg -y -i - -c copy {filename}'
 functions.runCommand(command)
 
 # Calculating Download Time
