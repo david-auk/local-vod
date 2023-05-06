@@ -101,7 +101,7 @@ if secret.info['plex']['isAvalible']:
 			for season in response["MediaContainer"]["Metadata"]:
 				print(f"Season: {season['title']}")
 				print(f"ratingKey: {season['ratingKey']}")
-				seasonResponse = requests.get(f'http://{secret.info['plex']['host']}:32400/library/metadata/{season["ratingKey"]}/children', headers={"Accept": "application/json", "X-Plex-Token": plexToken}).json()
+				seasonResponse = requests.get(f'http://{secret.info["plex"]["host"]}:32400/library/metadata/{season["ratingKey"]}/children', headers={"Accept": "application/json", "X-Plex-Token": plexToken}).json()
 				# EPISODE
 				for episode in seasonResponse['MediaContainer']['Metadata']:
 					for media in episode['Media']:
@@ -112,5 +112,5 @@ if secret.info['plex']['isAvalible']:
 								episode.batchEdits()
 								episode.editTitle(streamTitle).editSummary(f'On {functions.getDayFromDate(timeBeforeDownload)} {functions.getHourAndMinuteFromDate(timeBeforeDownload)} {channelNameClean} went live to stream: {streamGameName}')
 								episode.saveEdits()
-								
+
 time.sleep(15)
