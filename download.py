@@ -57,7 +57,7 @@ functions.checkOrCreateDir(f'{downloadDir}/{channelNameUrl}')
 timeBeforeDownload = functions.getCurrentTime()
 
 # Running the command
-command = f'streamlink twitch.tv/{channelNameUrl} best --twitch-disable-ads --stdout | ffmpeg -y -i - -c copy {filename}'
+command = f'/usr/local/bin/streamlink twitch.tv/{channelNameUrl} best --twitch-disable-ads --stdout | /usr/bin/ffmpeg -y -i - -c copy {filename}'
 functions.runCommand(command)
 
 # Calculating Download Time
@@ -95,13 +95,13 @@ if secret.info['plex']['isAvalible']:
 	for item in response["MediaContainer"]["Metadata"]:
 		# Channel
 		if item["title"].lower().replace(' ', '') == channelNameUrl or item["title"].lower().replace(' ', '_') == channelNameUrl:
-			channelResponse = requests.get(f"http://incus:32400{item['key']}", headers={"Accept": "application/json", "X-Plex-Token": plexToken})
+			channelResponse = requests.get(f"http://{secret.info['plex']['host']}:32400{item['key']}", headers={"Accept": "application/json", "X-Plex-Token": plexToken})
 			response = json.loads(channelResponse.text)
 			# SEASON
 			for season in response["MediaContainer"]["Metadata"]:
 				print(f"Season: {season['title']}")
 				print(f"ratingKey: {season['ratingKey']}")
-				seasonResponse = requests.get(f'http://incus:32400/library/metadata/{season["ratingKey"]}/children', headers={"Accept": "application/json", "X-Plex-Token": plexToken}).json()
+				seasonResponse = requests.get(f'http://{secret.info["plex"]["host"]}:32400/library/metadata/{season["ratingKey"]}/children', headers={"Accept": "application/json", "X-Plex-Token": plexToken}).json()
 				# EPISODE
 				for episode in seasonResponse['MediaContainer']['Metadata']:
 					for media in episode['Media']:
@@ -112,7 +112,5 @@ if secret.info['plex']['isAvalible']:
 								episode.batchEdits()
 								episode.editTitle(streamTitle).editSummary(f'On {functions.getDayFromDate(timeBeforeDownload)} {functions.getHourAndMinuteFromDate(timeBeforeDownload)} {channelNameClean} went live to stream: {streamGameName}')
 								episode.saveEdits()
-							#else:
-							#	print(f'filename.split(\'/\')[-1] = {filename.split("/")[-1]}\npart[\'file\'].split(\'/\')[-1] = {part["file"].split("/")[-1]}')
 
 time.sleep(15)
