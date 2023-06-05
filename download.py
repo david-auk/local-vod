@@ -34,8 +34,8 @@ streamThumbnailUrl = data['thumbnail_url']
 
 if secret.info['plex']['isAvalible']:
 	print("Getting plex facts")
-	plexLibraryNumber = functions.getPlexLibraryNumber(secret.info['plex']['plexLibraryName'])
-
+	#plexLibraryNumber = functions.getPlexLibraryNumber(secret.info['plex']['plexLibraryName'])
+	plexLibraryNumber = secret.info['plex']['plexLibraryNumber']
 	plexToken = secret.info['plex']['plexToken']
 
 	plex = PlexServer(f"http://{secret.info['plex']['host']}:32400", plexToken)
